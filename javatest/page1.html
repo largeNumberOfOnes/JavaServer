@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--<link rel="stylesheet" href="style.css" type="text/css" />-->
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <!--<script src="jquery.js"></script>-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  
+        <style type="text/css">
+           .knopka {
+           height: 40px;
+           width: 120px;
+           text-align: center;
+           line-height: 2.1;
+           cursor: pointer;
+           border: 1px solid #999;
+           border-radius: 10px;}
+           v{}
+        </style>
+        <script type="text/javascript">
+            $(function() {
+                window.WebSocket = window.WebSocket || window.MozWebSocket;
+                // var websocket = new WebSocket('ws://192.168.5.196:86/ws');
+                // var websocket = new WebSocket('ws://192.168.5.196:86/ws');
+                let websocket = new WebSocket("ws://localhost:8080");
+
+                websocket.onopen = function () {
+                    $('h1').css('color', '#65c178'); /* green */
+                };
+
+                websocket.onclose = function (e) {
+                    console.log("WebSocket: ", e)
+                    $('h1').css('color', '#fe457e'); /* red */
+                };
+
+                websocket.onerror = function () {
+                    $('h1').css('color', '#fe457e'); /* red */
+     
+                };
+
+                websocket.onmessage = function (message) {
+                    console.log(message.data);
+                    $('v').append($('<p>', { text: message.data }));
+                };
+                
+                $('.knp0').click(function(e) {
+                    e.preventDefault();
+                    websocket.send($('input').val());
+                    $('input').val('');
+                });
+
+                $("input[id='text-count']").keydown(function count() {
+                    number = $("input[id='text-count']").val().length + 1;
+                    $("#count").html(" The number of bytes: " + number);
+                });
+
+                $('.knp1').click(function(e) {
+                    e.preventDefault();
+                    websocket.send("hi");
+                });
+
+                $('.knp2').click(function(e) {
+                    e.preventDefault();
+                    websocket.send("ping");
+                });
+
+                $('.knp3').click(function(e) {
+                    e.preventDefault();
+                    websocket.send("close");
+                });
+
+            });
+        </script>
+        </head>
+    <body>
+        <h1>WebSocket</h1>
+     
+          <div class='knopka knp1'>Hi...</div>
+          <div class='knopka knp3'>Close</div>
+          <div class='knopka knp2'>Call PING</div>
+          <div class='knopka knp0'>Send</div> <input type="text" id="text-count"/><span id="count"></span>
+          <v></v>
+    </body>
+</html>

@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page</title>
+</head>
+<script src="public/main.js"></script>
+<body>
+    <div>
+        
+        <p>JUST A LOT OF TEXT</p>
+        <textarea name="sendField" id="sendField00" cols="30" rows="3"></textarea>
+    </div>
+    <p><input id="usernameid" type="text" name="userName" placeholder="Your name" size="18"></p>
+    <p><input id="userpassid" type="password" name="userPass" placeholder="Your password" size="18"></p>
+
+    <button onclick="sendfn()">send</button>
+    <button onclick="main()">main</button>
+    <button onclick="sendRegisterRequest()">register</button>
+    <button onclick="sendLoginRequest()">login</button>
+    
+
+    <script>
+        
+        // int 
+        // let response = await fetch(url);
+
+        // let commits = await response.json(); // читаем ответ в формате JSON
+
+        // console.log('hi')
+        // alert("hi");
+        // alert(commits[0].author.login);
+    </script>
+    <script>
+        function main() {
+            console.log("start main");
+            // let socket = new WebSocket("ws://localhost:8080/");
+            window.WebSocket = window.WebSocket || window.MozWebSocket;
+            // let socket = new WebSocket("ws://localhost:8080/socket");
+            let socket = new WebSocket("ws://localhost:8080");
+            // let socket = new WebSocket("ws://10.55.134.49:8080");
+            // let socket = new WebSocket("localhost:8080");
+            socket.onopen = function(e) {
+                console.log("[open] Соединение установлено");
+                console.log("Отправляем данные на сервер");
+                socket.send("Меня зовут Джон");
+            };
+            socket.onerror = function(error) {
+                console.log("[error]");
+            };
+            socket.onclose = function(event) {
+                if (event.wasClean) {
+                    alert("[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}");
+                } else {
+                // например, сервер убил процесс или сеть недоступна
+                // обычно в этом случае event.code 1006
+                    alert('[close] Соединение прервано');
+                }
+            };
+
+        }
+        function sendfn() {
+            console.log("send function");
+            socket.send("11111");
+
+        }
+    </script>
+    <script>
+        // main();
+    </script>
+</body>
+</html>

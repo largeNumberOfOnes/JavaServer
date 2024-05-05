@@ -1,6 +1,7 @@
 package server;
 
 import initial.MyLogger;
+import server.requestProcessor.RequestProcessor;
 
 import java.io.*;
 import java.net.Socket;
@@ -47,8 +48,8 @@ public class ProcessClient implements Runnable {
                 logger.info("HTTP request:\n" + requestStr.replace("\n", "\n\t| "));
 
                 HttpRequest request = new HttpRequest(requestStr);
-                ans = new ServerAnswer(request);
                 logger.info("Process HTTP request");
+                ans = RequestProcessor.process(request);
 
             }
             catch (IOException e) {

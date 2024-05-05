@@ -14,7 +14,7 @@ public class HttpRequest {
     private String method;
     private String path;
     private String protocol;
-    HashMap<String, String> body = new HashMap<String, String>();
+    private HashMap<String, String> body = new HashMap<String, String>();
 
     private void parseAndFillStartingLine(String str) {
         String[] arr = str.split(" ");
@@ -67,6 +67,28 @@ public class HttpRequest {
 
     public boolean isGET()  { return method.equals("GET"); }
     public boolean isPOST() { return method.equals("POST"); }
+
+    public String getHeader(String key) throws Exception {
+        if (!body.containsKey(key)) {
+            throw new Exception("No such header");
+        }
+        return body.get(key);
+    }
+
+    public String getCookie(String key)  throws Exception {
+        String[] cookies = getHeader("Cookie").split(";");
+        for (var q : cookies) {
+            String[] arr = q.strip().split("=");
+            if (arr[0].equals(key)) {
+                return arr[1];
+            }
+        }
+        throw new Exception("No such cookie");
+    }
+
+    public SessionIdentifier getCookie_SessionIdentifier() throws Exception {
+        return new SessionIdentifier(getCookie("SessionIdentifier"));
+    }
 
 }
 

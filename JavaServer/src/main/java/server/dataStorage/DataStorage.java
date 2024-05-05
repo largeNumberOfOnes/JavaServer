@@ -1,8 +1,10 @@
 package server.dataStorage;
 
 
+import initial.Context;
 import initial.MyLogger;
 import server.HttpRequest;
+import server.SessionIdentifier;
 import server.dataStorage.exceptions.*;
 
 import java.io.Closeable;
@@ -15,7 +17,10 @@ public class DataStorage implements Closeable {
 
     private DataBase dataBase = null;
     private DataCache dataCache = null;
-    private ArrayList<String> loginHashArr = new ArrayList<String>();
+    private DataServer dataServer = null;
+    private ArrayList<String> sessionIdentifierArr = new ArrayList<String>();
+
+    // Initialization and access ---------------------------------------------------------------------------------------
 
     public DataStorage() throws DataStorageException {
         if (instance != null) {
@@ -27,6 +32,7 @@ public class DataStorage implements Closeable {
         try {
             dataBase = new DataBase();
             dataCache = new DataCache();
+            dataServer = new DataServer();
         }
         catch (DataBaseException e) {
             logger.sever("Connect to DB fault", e);
@@ -34,9 +40,19 @@ public class DataStorage implements Closeable {
         catch (DataCacheException e) {
             logger.sever("Connect to DC fault", e);
         }
+        catch (DataServerException e) {
+            logger.sever("Connect to DS fault", e);
+        }
 
         instance = this;
         logger.info("Success connection to data storage");
+    }
+
+    @Override
+    public void close() throws IOException {
+        dataBase.close();
+        dataCache.close();
+        dataServer.close();
     }
 
     public static DataStorage getInstance() throws DataStorageException {
@@ -45,6 +61,8 @@ public class DataStorage implements Closeable {
         }
         return instance;
     }
+
+    // Interface -------------------------------------------------------------------------------------------------------
 
     public void login(String login, String pass) throws DataStorageException {
         try {
@@ -55,37 +73,39 @@ public class DataStorage implements Closeable {
             if (!user.pass.equals(pass)) {
                 throw new IncorrectPasswordException(pass);
             }
-            putLoginHash(login, pass);
+            putSessionIdentifier(login, pass);
         }
         catch (DataBaseException e) {
             throw new DataStorageException("Error while login user [%s]".formatted(login));
         }
     }
 
-    public String createLoginHash(String login, String pass) {
+    public String createSessionIdentifier(String login, String pass) {
         return login + pass;
     }
 
-    public void putLoginHash(String login, String pass) {
-        String loginHash = createLoginHash(login, pass);
-        if (!loginHashArr.contains(loginHash)) {
-            loginHashArr.add(loginHash);
+    public void putSessionIdentifier(String login, String pass) {
+        String loginHash = createSessionIdentifier(login, pass);
+        if (!sessionIdentifierArr.contains(loginHash)) {
+            sessionIdentifierArr.add(loginHash);
         }
     }
 
-    public boolean checkLoginHash(String hash) {
-        return loginHashArr.contains(hash);
+
+
+    public boolean checkSessionIdentifier(SessionIdentifier id) {
+        return !id.isNull() && sessionIdentifierArr.contains(id.toString());
     }
 
-    public void register(String name, String pass) throws DataStorageException {
+    public void register(String login, String pass) throws DataStorageException {
 
     }
 
-    public void setData(String name, String pass, String data) throws DataStorageException {
+    public void setData(String login, String pass, String data) throws DataStorageException {
 
     }
 
-    public void getData(String name, String pass, String data) throws DataStorageException {
+    public void getData(String login, String pass) throws DataStorageException {
 
     }
 
@@ -97,10 +117,38 @@ public class DataStorage implements Closeable {
         return null;
     }
 
-    @Override
-    public void close() throws IOException {
-        dataBase.close();
-        dataCache.close();
+    public byte[] getServerFile(String path, SessionIdentifier id) throws DataStorageException {
+        MyLogger logger = MyLogger.getInstance();
+        try {
+            DataServer dataServer = DataServer.getInstance();
+            if (haveAccess_toDataServer(path, id)) {
+                byte[] b = dataServer.loadPage(path);
+                System.out.println("file loaded");
+                return b;
+            } else {
+                throw new AccessDenied(path);
+            }
+        }
+        catch (DataServerException | IOException e) {
+            e.printStackTrace();
+            logger.warning("Error while loading page", e);
+            throw new DataStorageException("Error while loading page");
+        }
+    }
+
+    public String getFileContextType(String path) throws DataStorageException {
+        try {
+            return DataServer.getPageContextType(path);
+        }
+        catch (IOException e) {
+            throw new DataStorageException(e.getMessage());
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private boolean haveAccess_toDataServer(String path, SessionIdentifier id) {
+        return Context.isPublic(path) || checkSessionIdentifier(id);
     }
 
 }

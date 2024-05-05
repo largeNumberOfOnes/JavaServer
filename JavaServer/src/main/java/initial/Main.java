@@ -27,12 +27,12 @@ public class Main {
 //            muzzleThread.start();
 //            logger.log(Level.INFO, "Starting MainFrame");
 //
-//            Thread serverThread = new Thread(new Server());
-//            serverThread.start();
-//            logger.log(Level.INFO, "Starting Server");
+            Thread serverThread = new Thread(new Server());
+            serverThread.start();
+            logger.log(Level.INFO, "Starting Server");
 //
 //            muzzleThread.join();
-//            serverThread.join();
+            serverThread.join();
 
 //            String str = "w235";
 //            System.out.println(str);
@@ -48,7 +48,7 @@ public class Main {
 //            String fileStr = Base64.getEncoder().encodeToString(ba);
 //            System.out.println(fileStr);
 
-            testDataCache();
+//            testDataCache();
 
             MyLogger.getInstance().info("Close main");
         }

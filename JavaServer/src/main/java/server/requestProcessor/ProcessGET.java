@@ -16,9 +16,7 @@ import java.io.IOException;
 public class ProcessGET {
 
     public static ServerAnswer process(HttpRequest request) {
-        MyLogger.getInstance().info("Process GET request");
         if (request.getPath().equals("/")) {
-//            return return_Page("/public/index.html");
             return return_Page(Context.mainPage, SessionIdentifier.NOSID);
         }
         try {
@@ -32,10 +30,8 @@ public class ProcessGET {
 
     private static ServerAnswer return_Page(String path, SessionIdentifier id) {
         MyLogger logger = MyLogger.getInstance();
-//        logger.info("Process return_Page");
+        logger.info("Process return_Page");
         try {
-//            MyLogger logger = MyLogger.getInstance();
-            logger.info("Process return_Page");
 
             DataStorage dataStorage = DataStorage.getInstance();
             byte[] file = dataStorage.getServerFile(path, id);
@@ -49,15 +45,11 @@ public class ProcessGET {
                     .setHeader("Content-Length", "%d".formatted(file.length))
                     .setBodyPart(fileStr)
                     ;
-
-//            String ans = "";
-//            ans += "HTTP/1.1 200 OK\n";
-//            ans += "Content-Type: %s\n".formatted(getContextType(path));
-//            ans += "Content-Length: %d\n".formatted(file.length);
-//            ans += "\n";
-//            ans += fileStr;
-//            ans += "\n";
             return ans;
+        }
+        catch (AccessDenied e) {
+            logger.warning("AccessDenied", e);
+            return ServerAnswer.Forbidden;
         }
         catch (ResourceNotFound e) {
             logger.warning("ResourceNotFound", e);

@@ -55,12 +55,15 @@ public class MyLogger extends Logger implements Closeable {
     }
 
     public void sever(String msg, Exception e) {
-//        System.out.println(msg + stackTraceLoggerString(e));
         this.severe(msg + stackTraceLoggerString(e));
     }
 
     public void warning(String msg, Exception e) {
-        this.warning(msg + stackTraceLoggerString(e));
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        this.warning( stackTraceElements[2].toString() + " --> " + msg + stackTraceLoggerString(e));
+//        Thread.currentThread().getStackTrace().;
+//        this.warning(stackTraceElements[2].toString(), msg + stackTraceLoggerString(e));
+////        this.wa
     }
 
     private static String stackTraceLoggerString(Exception e) {

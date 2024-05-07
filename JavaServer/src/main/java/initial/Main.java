@@ -4,6 +4,7 @@ package initial;
 import server.Server;
 import server.dataStorage.DataBase;
 import server.dataStorage.DataCache;
+import server.dataStorage.DataServer;
 import server.dataStorage.DataStorage;
 import server.dataStorage.exceptions.DataCacheException;
 
@@ -49,6 +50,7 @@ public class Main {
 //            System.out.println(fileStr);
 
 //            testDataCache();
+//            testDataServer();
 
             MyLogger.getInstance().info("Close main");
         }
@@ -83,6 +85,19 @@ public class Main {
             dataStorage.login("mititka", "stringPass");
             dataStorage.login("mititkaa", "stringPass");
 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    static void testDataServer() {
+
+        try {
+            DataServer ser = new DataServer();
+            ser.loadPage("/public/index.html");
         }
         catch (Exception e) {
             e.printStackTrace();

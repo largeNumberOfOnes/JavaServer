@@ -119,9 +119,10 @@ public class DataStorage implements Closeable {
 
     public byte[] getServerFile(String path, SessionIdentifier id) throws DataStorageException {
         MyLogger logger = MyLogger.getInstance();
+        System.out.println("path: " + path);
         try {
-            DataServer dataServer = DataServer.getInstance();
             if (haveAccess_toDataServer(path, id)) {
+                System.out.println("access gained");
                 byte[] b = dataServer.loadPage(path);
                 System.out.println("file loaded");
                 return b;
@@ -129,7 +130,7 @@ public class DataStorage implements Closeable {
                 throw new AccessDenied(path);
             }
         }
-        catch (DataServerException | IOException e) {
+        catch (IOException e) {
             e.printStackTrace();
             logger.warning("Error while loading page", e);
             throw new DataStorageException("Error while loading page");

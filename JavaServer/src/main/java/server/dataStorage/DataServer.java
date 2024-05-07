@@ -6,10 +6,11 @@ import server.SessionIdentifier;
 import server.dataStorage.exceptions.DataBaseException;
 import server.dataStorage.exceptions.DataServerException;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -44,11 +45,14 @@ public class DataServer implements Closeable {
 
     public byte[] loadPage(String path) throws IOException {
         String fullpath = Context.basePath + path;
-        System.out.println(getExtension(fullpath));
+//        System.out.println(getExtension(fullpath));
         File file = new File(fullpath);
-        System.out.println("----");
-        System.out.println("Path " + fullpath);
-        return Files.readAllBytes(file.toPath());
+//        System.out.println("----");
+//        System.out.println("Path " + fullpath);
+//        byte[] b = Files.readAllBytes(file.toPath());
+//        byte[] b = Files.readAllBytes(Paths.get(fullpath));
+//        System.out.println("All bytes read");
+        return Files.readAllBytes(Paths.get(fullpath));
     };
 
     private static String getExtension(String path) {

@@ -22,7 +22,7 @@ public class ServerAnswer {
     private ArrayList<String> body = new ArrayList<String>();
 
     public ServerAnswer(String mes) {
-        this.mes = mes + "\n\n";
+        this.mes = mes + "\n";
     }
 
     public ServerAnswer setHeader(String header, String value) {
@@ -49,7 +49,7 @@ public class ServerAnswer {
             str.append(q);
             str.append("\n\n");
         }
-        return mes;
+        return str.toString();
     }
 
     public static final ServerAnswer NotFound = new ServerAnswer("HTTP/1.1 404 Not Found");

@@ -86,9 +86,13 @@ public class HttpRequest {
         throw new Exception("No such cookie");
     }
 
-    public SessionIdentifier getCookie_SessionIdentifier() throws Exception {
-        return new SessionIdentifier(getCookie("SessionIdentifier"));
+    public SessionIdentifier getCookie_SessionIdentifier() {
+        try {
+            return new SessionIdentifier(getCookie("SessionIdentifier"));
+        }
+        catch (Exception e) {
+            return SessionIdentifier.NOSID;
+        }
     }
 
 }
-

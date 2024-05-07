@@ -52,6 +52,7 @@ public class ServerAnswer {
         return str.toString();
     }
 
+    public static final ServerAnswer OK = new ServerAnswer("HTTP/1.1 200 OK");
     public static final ServerAnswer NotFound = new ServerAnswer("HTTP/1.1 404 Not Found");
     public static final ServerAnswer Forbidden = new ServerAnswer("HTTP/1.1 403 Forbidden");
     public static final ServerAnswer BadRequest = new ServerAnswer("HTTP/1.1 400 Bad Request");

@@ -18,6 +18,25 @@ main()
 
 
 
+async function sendSendRequest() {
+    let url = '/public/smallPage.html';
+    let response = await fetch(url, {
+        method: 'GET'
+    });
+    
+    if (response.ok) {
+        let ans = await response.text();
+        resp = response;
+        // globans = ans;
+        // console.log(ans);
+        // window.location.href = response.headers.get('Redirect');
+        // window.location.replace(response.headers.get('Redirect'));
+    } else {
+        console.log('response is not ok')
+        console.log("Ошибка HTTP: " + response.status);
+    }
+}
+
 async function sendRegisterRequest() {
 
     let name  = document.getElementById('usernameid').value;
@@ -26,7 +45,7 @@ async function sendRegisterRequest() {
     // console.log("user pass: " + pass);
     // return;
 
-    let url = '/users/register';
+    let url = '/public/users/register';
     let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -44,8 +63,9 @@ async function sendRegisterRequest() {
     }
 }
 
+let resp;
 async function sendLoginRequest() {
-    let url = '/users/login';
+    let url = '/public/users/login';
     let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -57,7 +77,19 @@ async function sendLoginRequest() {
     });
     
     if (response.ok) {
-        let ans = await response.text();
+        // let ans = await response;
+        resp = response;
+        // console.log('--------------');
+        // console.log(response.headers);
+        let cookieList = response.headers.get('SetSessionIdentifier').split('; ');
+        cookieList.forEach(function(item, i, arr) {
+            document.cookie = item;
+        });
+          // alert( i + ": " + item + " (массив:" + arr + ")" );
+          // el = item.split('=');
+          // if (el[0] == 'sessionIdentifier') {
+          //   doel[1];
+          // }
         // globans = ans;
         // console.log(ans);
         // window.location.href = response.headers.get('Redirect');
@@ -68,3 +100,28 @@ async function sendLoginRequest() {
     }
 }
 
+function deleteAllCookies() {
+    const cookies = document.cookie.split(";");
+
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=; Max-Age=-99999999;";
+    }
+}
+
+async function sendLogoutRequest() {
+    let url = '/public/users/logout';
+    let response = await fetch(url, {
+        method: 'POST'
+    });
+    
+    if (response.ok) {
+        deleteAllCookies();
+        window.location.replace('/');
+    } else {
+        console.log('response is not ok')
+        console.log("Ошибка HTTP: " + response.status);
+    }
+}

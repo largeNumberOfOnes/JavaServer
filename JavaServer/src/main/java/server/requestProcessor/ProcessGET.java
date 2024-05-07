@@ -48,7 +48,7 @@ public class ProcessGET {
             return ans;
         }
         catch (AccessDenied e) {
-            logger.warning("AccessDenied", e);
+            logger.warning("AccessDenied with [%s]".formatted(id.toString()), e);
             return ServerAnswer.Forbidden;
         }
         catch (ResourceNotFound e) {

@@ -5,7 +5,7 @@ public class SessionIdentifier {
     private String id;
 
     public SessionIdentifier(String login, String pass) {
-        id = login + pass;
+        id = createAsString(login, pass);
     }
     public SessionIdentifier(String sessionIdentifier) {
         id = sessionIdentifier;
@@ -23,5 +23,16 @@ public class SessionIdentifier {
         return id;
     }
 
+    public static String createAsString(String login, String pass) {
+        return login + pass;
+    }
     public static SessionIdentifier NOSID = new SessionIdentifier();
+
+    @Override
+    public boolean equals(Object id) {
+        if (id instanceof SessionIdentifier) {
+            return id.toString().equals(this.id);
+        }
+        return false;
+    }
 }

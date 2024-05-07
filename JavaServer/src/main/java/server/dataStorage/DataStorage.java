@@ -18,7 +18,7 @@ public class DataStorage implements Closeable {
     private DataBase dataBase = null;
     private DataCache dataCache = null;
     private DataServer dataServer = null;
-    private ArrayList<String> sessionIdentifierArr = new ArrayList<String>();
+    private ArrayList<SessionIdentifier> sessionIdentifierArr = new ArrayList<SessionIdentifier>();
 
     // Initialization and access ---------------------------------------------------------------------------------------
 
@@ -80,25 +80,39 @@ public class DataStorage implements Closeable {
         }
     }
 
-    public String createSessionIdentifier(String login, String pass) {
-        return login + pass;
-    }
-
     public void putSessionIdentifier(String login, String pass) {
-        String loginHash = createSessionIdentifier(login, pass);
+        SessionIdentifier loginHash = new SessionIdentifier(login, pass);
         if (!sessionIdentifierArr.contains(loginHash)) {
             sessionIdentifierArr.add(loginHash);
         }
     }
-
-
+    public void removeSessionIdentifier(SessionIdentifier id) {
+        sessionIdentifierArr.remove(id);
+    }
 
     public boolean checkSessionIdentifier(SessionIdentifier id) {
-        return !id.isNull() && sessionIdentifierArr.contains(id.toString());
+//        return !id.isNull() && sessionIdentifierArr.contains(id.toString());
+//        for (var q : sessionIdentifierArr) {
+//            System.out.print("--->");
+//            System.out.println(q);
+//        }
+        return sessionIdentifierArr.contains(id);
     }
 
     public void register(String login, String pass) throws DataStorageException {
+        try {
+            if (dataBase.isUserExist(login)) {
+                throw new UserAlreadyExistsException(login);
+            }
+            dataBase.addUser(login, pass);
+        }
+        catch (DataBaseException e) {
+            throw new DataStorageException("Error while register user [%s]".formatted(login));
+        }
+    }
 
+    public void logout(SessionIdentifier id) throws DataStorageException {
+        removeSessionIdentifier(id);
     }
 
     public void setData(String login, String pass, String data) throws DataStorageException {
@@ -118,20 +132,20 @@ public class DataStorage implements Closeable {
     }
 
     public byte[] getServerFile(String path, SessionIdentifier id) throws DataStorageException {
+//        putSessionIdentifier("Oleg", "super");
         MyLogger logger = MyLogger.getInstance();
-        System.out.println("path: " + path);
+//        System.out.println("path: " + path);
         try {
             if (haveAccess_toDataServer(path, id)) {
-                System.out.println("access gained");
+//                System.out.println("access gained");
                 byte[] b = dataServer.loadPage(path);
-                System.out.println("file loaded");
+//                System.out.println("file loaded");
                 return b;
             } else {
                 throw new AccessDenied(path);
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
             logger.warning("Error while loading page", e);
             throw new DataStorageException("Error while loading page");
         }
@@ -149,6 +163,10 @@ public class DataStorage implements Closeable {
     // -----------------------------------------------------------------------------------------------------------------
 
     private boolean haveAccess_toDataServer(String path, SessionIdentifier id) {
+        return Context.isPublic(path) || checkSessionIdentifier(id);
+    }
+
+    private boolean haveAccess_toDataBase(String path, SessionIdentifier id) {
         return Context.isPublic(path) || checkSessionIdentifier(id);
     }
 

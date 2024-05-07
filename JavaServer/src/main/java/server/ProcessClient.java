@@ -62,7 +62,7 @@ public class ProcessClient implements Runnable {
             }
 
             logger.info("Send server answer:\n" + ans.toString());
-            System.out.println("ans = " + ans.toString());
+//            System.out.println("ans = " + ans.toString());
             output.println(ans.toString());
 //            output.write(ans.toString());
 //            output.write("\n");

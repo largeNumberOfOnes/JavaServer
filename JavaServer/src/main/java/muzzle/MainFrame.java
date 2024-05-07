@@ -38,6 +38,8 @@ public class MainFrame extends JFrame {
 //        });
 
 //        consolePan.getLayout().addLayoutComponent();
+
+        // Console command handler
         consoleInput.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

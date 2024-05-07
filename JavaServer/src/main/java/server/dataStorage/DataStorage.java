@@ -82,12 +82,18 @@ public class DataStorage implements Closeable {
 
     public void putSessionIdentifier(String login, String pass) {
         SessionIdentifier loginHash = new SessionIdentifier(login, pass);
-        if (!sessionIdentifierArr.contains(loginHash)) {
-            sessionIdentifierArr.add(loginHash);
+//        if (!sessionIdentifierArr.contains(loginHash)) {
+//            sessionIdentifierArr.add(loginHash);
+//        }
+
+        String sessionIdentifier = SessionIdentifier.createAsString(login, pass);
+        if (!dataCache.contains(sessionIdentifier)) {
+            dataCache.putSessionIdentifier(sessionIdentifier);
         }
     }
     public void removeSessionIdentifier(SessionIdentifier id) {
-        sessionIdentifierArr.remove(id);
+//        sessionIdentifierArr.remove(id);
+        dataCache.removeSessionIdentifier(id.toString());
     }
 
     public boolean checkSessionIdentifier(SessionIdentifier id) {
@@ -96,7 +102,8 @@ public class DataStorage implements Closeable {
 //            System.out.print("--->");
 //            System.out.println(q);
 //        }
-        return sessionIdentifierArr.contains(id);
+//        return sessionIdentifierArr.contains(id);
+        return dataCache.contains(id.toString());
     }
 
     public void register(String login, String pass) throws DataStorageException {

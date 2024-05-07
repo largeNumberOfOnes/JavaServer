@@ -1,6 +1,7 @@
 package server.dataStorage;
 
 import initial.MyLogger;
+import server.SessionIdentifier;
 import server.dataStorage.exceptions.DataBaseException;
 import server.dataStorage.exceptions.DataCacheException;
 
@@ -13,6 +14,8 @@ public class DataCache implements Closeable {
 
     private static DataCache instance = null;
     private Jedis jedis = null;
+
+    private String sessionIdentifierArr = "SAR";
 
     public DataCache() throws DataCacheException {
         if (instance != null) {
@@ -42,6 +45,17 @@ public class DataCache implements Closeable {
         return jedis.get(key);
     }
 
+    public boolean contains(String id) {
+        return jedis.sismember(sessionIdentifierArr, id);
+    }
+
+    public void putSessionIdentifier(String id) {
+        jedis.sadd(sessionIdentifierArr, id);
+    }
+
+    public void removeSessionIdentifier(String id) {
+        jedis.srem(sessionIdentifierArr, id);
+    }
 
     @Override
     public void close() {

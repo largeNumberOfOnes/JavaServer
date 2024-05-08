@@ -1,6 +1,9 @@
 package server;
 
 import initial.MyLogger;
+import server.dataStorage.DataBase;
+import server.dataStorage.DataStorage;
+import server.dataStorage.exceptions.DataBaseException;
 
 import java.security.KeyPair;
 import java.util.concurrent.Exchanger;
@@ -74,17 +77,18 @@ public class ConsoleCommandHandler implements Runnable {
         System.out.println("com: " + com);
         return switch (com) {
             case "server" -> server(args);
+            case "data" -> data(args);
             default -> str_undefCommand + " [%s]".formatted(com);
         };
     }
 
     public String server(String command) {
-        MyLogger.getInstance().info("Processing: %s".formatted(command));
         String args = getCommand(command);
         String com  = getArgs(command);
-        return switch (command) {
+        return switch (com) {
             case "stop" -> server_stop();
             case "start" -> server_start();
+            case "status" -> server_start();
             default -> str_undefCommand;
         };
     }
@@ -107,6 +111,40 @@ public class ConsoleCommandHandler implements Runnable {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return str_error;
+        }
+    }
+
+    public String server_status() {
+        return """
+        Имя: Капитан Старинных Времен
+        Внешность: Старательно проработанный, собранный из всестороннего барахла, с широкими плечами, глубоким голосом и внушительной бородой, длиной до public static void main. Он всегда одет в старинный морской костюм, украшенный яркими эполетами и массивными золотыми кнопками. На его голове всегда старинная треугольная шляпа, украшенная пером и StackTrace-ом.
+        Характер: Скрытный. Не женат.
+        Мотивация: to PostgreSQL JDBC Driver successfully.
+        Особенности: Капитан Старинных Времен обладает внушительным опытом в чтении логов. Он знает каждый уголок океана и умеет управлять своим кораблем даже в самых сложных условиях. Кроме того, он владеет множеством навыков, необходимых для выживания на необитаемых островах и в битвах с другими пиратами.
+        Девиз: /com/formdev/flatlaf
+        """;
+    }
+
+    public String data(String command) {
+        String com  = getCommand(command);
+        String args = getArgs(command);
+        return switch (com) {
+            case "isUserExists" -> data_isUserExists(args);
+            default -> str_undefCommand;
+        };
+    }
+
+    public String data_isUserExists(String command) {
+        String args = getCommand(command);
+        try {
+            if (DataBase.getInstance().isUserExist(args)) {
+                return "true";
+            } else {
+                return "false";
+            }
+        }
+        catch (DataBaseException e) {
             return str_error;
         }
     }

@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
                 consoleSpace.append(">>> " + text + "\n");
                 try {
                     String ans = ConsoleCommandHandler.getInstance().commandHandler(text);
-                    consoleSpace.append(ans);
+                    consoleSpace.append(ans + "\n");
                 }
                 catch (Exception e) {
 //                    consoleSpace.append(">>>" + text + "\n");

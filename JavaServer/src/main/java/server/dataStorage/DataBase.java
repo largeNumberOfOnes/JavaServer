@@ -163,6 +163,19 @@ public class DataBase implements Closeable {
         }
     }
 
+    public void putStringToChat(String login, String message) throws DataBaseException {
+        MyLogger logger = MyLogger.getInstance();
+        try {
+            String command = "INSERT INTO chat (login, mew_type, mes) VALUES ('%s', '%s', '%s');"
+                    .formatted(login, "str", message);
+            statement.executeUpdate(command);
+        }
+        catch (SQLException e) {
+            logger.warning("Error while setting message into chat", e);
+            throw new DataBaseException("Error while setting message into chat");
+        }
+    }
+
 //    public boolean loginUser(String login, String pass) {
 //        try {
 //            String command = String.format("SELECT login, pass FROM public.users WHERE login = %s;", login);

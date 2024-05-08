@@ -122,11 +122,20 @@ public class DataStorage implements Closeable {
         removeSessionIdentifier(id);
     }
 
-    public void setData(String login, String pass, String data) throws DataStorageException {
+    public void putStringToChat(String login, String message) throws DataStorageException {
+        try {
+            dataBase.putStringToChat(login, message);
+        }
+        catch (DataBaseException e) {
+            throw new DataStorageException("Error while putting message to database [%s]".formatted(login));
+        }
+    }
+
+    public void setUserData(String login, String pass, String data) throws DataStorageException {
 
     }
 
-    public void getData(String login, String pass) throws DataStorageException {
+    public void getUserData(String login, String pass) throws DataStorageException {
 
     }
 

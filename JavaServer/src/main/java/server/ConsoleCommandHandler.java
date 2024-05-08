@@ -78,6 +78,7 @@ public class ConsoleCommandHandler implements Runnable {
         return switch (com) {
             case "server" -> server(args);
             case "data" -> data(args);
+            case "help" -> help();
             default -> str_undefCommand + " [%s]".formatted(com);
         };
     }
@@ -88,7 +89,7 @@ public class ConsoleCommandHandler implements Runnable {
         return switch (com) {
             case "stop" -> server_stop();
             case "start" -> server_start();
-            case "status" -> server_start();
+            case "status" -> server_status();
             default -> str_undefCommand;
         };
     }
@@ -147,6 +148,16 @@ public class ConsoleCommandHandler implements Runnable {
         catch (DataBaseException e) {
             return str_error;
         }
+    }
+
+    public String help() {
+        return """
+               server stop
+               server start
+               server status
+               data isUserExists
+               help
+               """;
     }
 
 }

@@ -13,10 +13,18 @@ import server.dataStorage.exceptions.DataStorageException;
 
 public class Server implements Runnable {
 
+    public static boolean woark = true;
+
     public void run() {
 
-//        new Thread(new ConsoleCommandHandler()).start();
         MyLogger logger = MyLogger.getInstance();
+        try {
+            new Thread(new ConsoleCommandHandler()).start();
+        }
+        catch (Exception e) {
+            logger.sever("Error while creating ConsoleCommandHandler", e);
+            return;
+        }
 
         try (ServerSocket serverSocket = new ServerSocket(Context.port);
              DataStorage storage = new DataStorage()
@@ -24,9 +32,11 @@ public class Server implements Runnable {
             logger.info("Start HTTP request handler");
 
             while (!serverSocket.isClosed()) {
-                Socket socket = serverSocket.accept();
-                logger.info("Catch HTTP request");
-                new Thread(new ProcessClient(socket)).start();
+                if (woark) {
+                    Socket socket = serverSocket.accept();
+                    logger.info("Catch HTTP request");
+                    new Thread(new ProcessClient(socket)).start();
+                }
             }
 
             logger.info("Close HTTP request handler");

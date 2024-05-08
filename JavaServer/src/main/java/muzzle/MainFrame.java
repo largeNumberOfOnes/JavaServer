@@ -2,6 +2,7 @@ package muzzle;
 
 import initial.MyLogger;
 import server.ConsoleCommand;
+import server.ConsoleCommandHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,13 +45,23 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                var exchanger = new Exchanger<ConsoleCommand>();
+//                var exchanger = new Exchanger<ConsoleCommand>();
 
                 String text = consoleInput.getText();
-                consoleInput.setText("");
-                System.out.println(">>> " + text);
-                consoleSpace.append(text + "\n");
+//                consoleInput.setText("");
+//                System.out.println(">>> " + text);
+//                consoleSpace.append(text + "\n");
 //                exchanger.exchange()
+                consoleSpace.append(">>> " + text + "\n");
+                try {
+                    String ans = ConsoleCommandHandler.getInstance().commandHandler(text);
+                    consoleSpace.append(ans);
+                }
+                catch (Exception e) {
+//                    consoleSpace.append(">>>" + text + "\n");
+                    consoleSpace.append("Error: Command cannot be executed");
+                    e.printStackTrace();
+                }
 
 
             }

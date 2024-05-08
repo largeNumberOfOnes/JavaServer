@@ -2,11 +2,13 @@ package server.dataStorage;
 
 import initial.Context;
 import initial.MyLogger;
+import server.Message;
 import server.dataStorage.exceptions.DataBaseException;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class DataBase implements Closeable {
@@ -173,6 +175,30 @@ public class DataBase implements Closeable {
         catch (SQLException e) {
             logger.warning("Error while setting message into chat", e);
             throw new DataBaseException("Error while setting message into chat");
+        }
+    }
+
+    public ArrayList<Message> getAllChatMessages() throws DataBaseException {
+        MyLogger logger = MyLogger.getInstance();
+        try {
+            String command = "SELECT (mes_date, mes_time, login, mes_type, mes) FROM chat;";
+            ResultSet res = statement.executeQuery(command);
+//            var str = new StringBuilder();
+            var mesList = new ArrayList<Message>();
+            while (res.next()) {
+                mesList.add(new Message(
+                    res.getString(1),
+                    res.getString(2),
+                    res.getString(3),
+                    res.getString(4),
+                    res.getString(5)
+                ));
+            }
+            return mesList;
+        }
+        catch (SQLException e) {
+            logger.warning("Error while getting all users from database", e);
+            throw new DataBaseException("Error while getting all users from database");
         }
     }
 

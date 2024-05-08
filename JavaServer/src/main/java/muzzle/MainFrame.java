@@ -1,14 +1,12 @@
 package muzzle;
 
 import initial.MyLogger;
-import server.ConsoleCommand;
 import server.ConsoleCommandHandler;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Exchanger;
 
 public class MainFrame extends JFrame {
 
@@ -17,7 +15,9 @@ public class MainFrame extends JFrame {
     private JPanel consolePan;
     private JTextArea consoleSpace;
     private JTextField consoleInput;
-    private JTable table1;
+    private JButton button1;
+    private JTextPane textPane2;
+    private JList list1;
 
     public MainFrame(MyLogger logger) {
 

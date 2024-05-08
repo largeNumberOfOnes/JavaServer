@@ -18,24 +18,24 @@ main()
 
 
 
-async function sendSendRequest() {
-    let url = '/public/smallPage.html';
-    let response = await fetch(url, {
-        method: 'GET'
-    });
+// async function sendSendRequest() {
+//     let url = '/public/smallPage.html';
+//     let response = await fetch(url, {
+//         method: 'GET'
+//     });
     
-    if (response.ok) {
-        let ans = await response.text();
-        resp = response;
-        // globans = ans;
-        // console.log(ans);
-        // window.location.href = response.headers.get('Redirect');
-        // window.location.replace(response.headers.get('Redirect'));
-    } else {
-        console.log('response is not ok')
-        console.log("Ошибка HTTP: " + response.status);
-    }
-}
+//     if (response.ok) {
+//         let ans = await response.text();
+//         resp = response;
+//         // globans = ans;
+//         // console.log(ans);
+//         // window.location.href = response.headers.get('Redirect');
+//         // window.location.replace(response.headers.get('Redirect'));
+//     } else {
+//         console.log('response is not ok')
+//         console.log("Ошибка HTTP: " + response.status);
+//     }
+// }
 
 async function sendRegisterRequest() {
 
@@ -111,15 +111,40 @@ function deleteAllCookies() {
     }
 }
 
-async function sendLogoutRequest() {
-    let url = '/public/users/logout';
+// ------------------------------------------------------------------------------------------
+
+async function sendGetMesRequest() {
+    let url = '/internal/users/getmes';
     let response = await fetch(url, {
-        method: 'POST'
-    });
+        method: 'GET'
+    }
+    );
     
     if (response.ok) {
-        deleteAllCookies();
-        window.location.replace('/');
+        let mesList = response.text();
+        console.log(mesList);
+    } else {
+        console.log('response is not ok')
+        console.log("Ошибка HTTP: " + response.status);
+    }
+}
+
+function getMes() {
+    return document.getElementById('sendField00').value; 
+}
+
+async function sendSendRequest() {
+    let url = '/internal/users/send';
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            mes: getMes()
+        }
+    }
+    );
+    
+    if (response.ok) {
+        console.log('OK');
     } else {
         console.log('response is not ok')
         console.log("Ошибка HTTP: " + response.status);

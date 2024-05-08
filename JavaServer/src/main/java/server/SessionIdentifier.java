@@ -3,9 +3,11 @@ package server;
 public class SessionIdentifier {
 
     private String id;
+    private String login = "untiledUser";
 
     public SessionIdentifier(String login, String pass) {
         id = createAsString(login, pass);
+        this.login = login;
     }
     public SessionIdentifier(String sessionIdentifier) {
         id = sessionIdentifier;
@@ -24,9 +26,13 @@ public class SessionIdentifier {
     }
 
     public static String createAsString(String login, String pass) {
-        return login + pass;
+        return login + "^" + pass;
     }
     public static SessionIdentifier NOSID = new SessionIdentifier();
+
+    public String getLogin() {
+        return id.split("\\^")[0];
+    }
 
     @Override
     public boolean equals(Object id) {

@@ -24,15 +24,15 @@ public class Main {
         try (MyLogger logger = new MyLogger()){
             MyLogger.getInstance().info("Start main");
 
-//            Thread muzzleThread = new Thread(new Muzzle(logger));
-//            muzzleThread.start();
-//            logger.log(Level.INFO, "Starting MainFrame");
+            Thread muzzleThread = new Thread(new Muzzle(logger));
+            muzzleThread.start();
+            logger.log(Level.INFO, "Starting MainFrame");
 ////
             Thread serverThread = new Thread(new Server());
             serverThread.start();
             logger.log(Level.INFO, "Starting Server");
 ////
-//            muzzleThread.join();
+            muzzleThread.join();
             serverThread.join();
 
 //            String str = "w235";

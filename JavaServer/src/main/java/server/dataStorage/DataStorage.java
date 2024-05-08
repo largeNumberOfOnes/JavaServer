@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import initial.Context;
 import initial.MyLogger;
 import server.HttpRequest;
+import server.Message;
 import server.ServerAnswer;
 import server.SessionIdentifier;
 import server.dataStorage.exceptions.*;
@@ -125,9 +126,13 @@ public class DataStorage implements Closeable {
         removeSessionIdentifier(id);
     }
 
-    public void putStringToChat(String login, String message) throws DataStorageException {
+    public void putStringToChat(String login, String message, String path, SessionIdentifier id) throws DataStorageException {
         try {
-            dataBase.putStringToChat(login, message);
+            if (haveAccess_toDataBase(path, id)) {
+                dataBase.putStringToChat(login, message);
+            } else {
+                throw new AccessDenied(path);
+            }
         }
         catch (DataBaseException e) {
             throw new DataStorageException("Error while putting message to database [%s]".formatted(login));
@@ -154,11 +159,24 @@ public class DataStorage implements Closeable {
     }
     public void writeSessionToCache(Session session) throws DataStorageException {
         dataCache.putSessionToCache(SessionToStr(session));
-
     }
 
-    public ArrayList<HttpRequest> getRequestsFromCache() throws DataStorageException {
+    public ArrayList<HttpRequest> getSessionsFromCache() throws DataStorageException {
         return null;
+    }
+
+    public ArrayList<Message> getAllChatMessages(SessionIdentifier id) throws DataStorageException {
+        MyLogger logger = MyLogger.getInstance();
+        try {
+            if (haveAccess_toDataBase("", id)) {
+                return dataBase.getAllChatMessages();
+            }
+            throw new AccessDenied("");
+        }
+        catch (DataBaseException e) {
+            logger.warning("Error while loading all chat messages", e);
+            throw new DataStorageException("Error while loading all chat messages");
+        }
     }
 
     public byte[] getServerFile(String path, SessionIdentifier id) throws DataStorageException {

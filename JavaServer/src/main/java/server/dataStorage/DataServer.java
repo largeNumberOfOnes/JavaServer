@@ -63,6 +63,7 @@ public class DataServer implements Closeable {
         String ext = getExtension(path);
         return switch (ext) {
             case "html" -> "text/html; charset=utf-8";
+            case "css" -> "text/css; charset=utf-8";
             case "js" -> "text/html; charset=utf-8";
             case "ico" -> "image/x-icon";
             default -> throw new IOException("Unrecognized file extension [%s]".formatted(ext));

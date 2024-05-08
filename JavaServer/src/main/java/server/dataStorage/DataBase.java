@@ -190,9 +190,7 @@ public class DataBase implements Closeable {
                 mesList.add(new Message(
                     res.getDate(1).toString(),
                     res.getTime(2).toString(),
-//                    "", "",
                     res.getString(3),
-//"",""
                     res.getString(4),
                     res.getString(5)
                 ));

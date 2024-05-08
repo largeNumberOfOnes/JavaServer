@@ -111,6 +111,25 @@ function deleteAllCookies() {
     }
 }
 
+async function sendLogoutRequest() {
+
+    let url = '/public/users/logout';
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+        }
+    });
+    
+    if (response.ok) {
+        let ans = await response.text();
+        deleteAllCookies();
+        window.location.replace('/');
+    } else {
+        console.log('response is not ok')
+        console.log("Ошибка HTTP: " + response.status);
+    }
+}
+
 // ------------------------------------------------------------------------------------------
 
 async function sendGetMesRequest() {
@@ -149,6 +168,7 @@ async function sendSendRequest() {
     
     if (response.ok) {
         console.log('OK');
+        sendGetMesRequest()
     } else {
         console.log('response is not ok')
         console.log("Ошибка HTTP: " + response.status);

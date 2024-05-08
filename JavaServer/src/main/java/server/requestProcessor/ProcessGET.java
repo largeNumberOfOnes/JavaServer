@@ -80,8 +80,7 @@ public class ProcessGET {
                 str.append("<div>");
                 str.append("<p class=\"sender\">%s %s: %s:</p>".formatted(q.date, q.time, q.login));
                 str.append("<p>%s</p>".formatted(q.mes));
-                str.append("<hr align=\"right\" width=\"300\" size=\"4\" color=\"#ff9900\" />");
-                str.append("</div>");
+                str.append("<hr align=\"right\" width=\"3000\" size=\"4\" color=\"#ff9900\" />");
                 str.append("</div>\n");
             }
 //            String cookies = request.getHeader("Cookie");

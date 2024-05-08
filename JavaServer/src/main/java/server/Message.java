@@ -2,11 +2,11 @@ package server;
 
 public class Message {
 
-    String date;
-    String time;
-    String login;
-    String type;
-    String mes;
+    public String date;
+    public String time;
+    public String login;
+    public String type;
+    public String mes;
 
     public Message(String date, String time, String login, String type, String mes) {
         this.date  = date;
@@ -15,5 +15,7 @@ public class Message {
         this.type  = type;
         this.mes   = mes;
     }
+
+
 
 }

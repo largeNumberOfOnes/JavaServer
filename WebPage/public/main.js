@@ -119,10 +119,14 @@ async function sendGetMesRequest() {
         method: 'GET'
     }
     );
+    let mesList = await response.text();
+    // let mesList = response.text();
+    // console.log(mesList);
+    // console.log('w;jgwen');
+    document.getElementById('e217281728').innerHTML = mesList;
     
     if (response.ok) {
-        let mesList = response.text();
-        console.log(mesList);
+        
     } else {
         console.log('response is not ok')
         console.log("Ошибка HTTP: " + response.status);

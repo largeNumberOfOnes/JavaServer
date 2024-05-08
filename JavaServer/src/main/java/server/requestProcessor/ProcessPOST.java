@@ -3,6 +3,7 @@ package server.requestProcessor;
 import initial.Context;
 import initial.MyLogger;
 import server.HttpRequest;
+import server.Message;
 import server.ServerAnswer;
 import server.SessionIdentifier;
 import server.dataStorage.DataStorage;
@@ -22,9 +23,6 @@ public class ProcessPOST {
         }
         else if (request.getPath().equals("/internal/users/send")) {
             return sendRequest(request);
-        }
-        else if (request.getPath().equals("/internal/users/getMes")) {
-            return getMesRequest(request);
         } else {
             return ServerAnswer.NotFound;
         }
@@ -144,28 +142,6 @@ public class ProcessPOST {
             SessionIdentifier id = request.getCookie_SessionIdentifier();
 
             dataStorage.putStringToChat(id.getLogin(), request.getHeader("mes"), "/internal/users/send", id);
-//            String cookies = request.getHeader("Cookie");
-
-            return ServerAnswer.OK;
-        }
-        catch (AccessDenied e) {
-            logger.warning("Warning no such session identifier", e);
-            return ServerAnswer.Forbidden;
-        }
-        catch (DataStorageException e) {
-            logger.warning("Error connecting to data storage", e);
-            return ServerAnswer.InternalServerError;
-        }
-    }
-
-    private static ServerAnswer getMesRequest(HttpRequest request) {
-        MyLogger logger = MyLogger.getInstance();
-        try {
-            DataStorage dataStorage = DataStorage.getInstance();
-            SessionIdentifier id = request.getCookie_SessionIdentifier();
-
-            var mesList = dataStorage.getAllChatMessages(id);
-            
 //            String cookies = request.getHeader("Cookie");
 
             return ServerAnswer.OK;

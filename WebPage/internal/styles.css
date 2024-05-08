@@ -1,6 +1,9 @@
 body {
    background-color: #e9e9f0;
    }
+.sender {
+  color: #0000dd;
+}
 .footer {
   background-color: #2e34e5;
    position: fixed;

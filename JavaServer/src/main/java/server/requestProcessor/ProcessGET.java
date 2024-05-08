@@ -12,12 +12,17 @@ import server.dataStorage.exceptions.ResourceNotFound;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 public class ProcessGET {
 
     public static ServerAnswer process(HttpRequest request) {
         if (request.getPath().equals("/")) {
             return return_Page(Context.mainPage, SessionIdentifier.NOSID);
+        }
+        else if (request.getPath().equals("/internal/users/getmes")) {
+            return getMesRequest(request);
         }
         try {
             return return_Page(request.getPath(), request.getCookie_SessionIdentifier());
@@ -57,6 +62,38 @@ public class ProcessGET {
         }
         catch (DataStorageException e) {
             logger.warning("DataStorageException", e);
+            return ServerAnswer.InternalServerError;
+        }
+    }
+
+    private static ServerAnswer getMesRequest(HttpRequest request) {
+        MyLogger logger = MyLogger.getInstance();
+        try {
+            DataStorage dataStorage = DataStorage.getInstance();
+            SessionIdentifier id = request.getCookie_SessionIdentifier();
+
+            var mesList = dataStorage.getAllChatMessages(id);
+            Collections.reverse(mesList);
+
+            StringBuilder str = new StringBuilder();
+            for (var q : mesList) {
+                str.append("<div>");
+                str.append("<p class=\"sender\">%s %s: %s:</p>".formatted(q.date, q.time, q.login));
+                str.append("<p>%s</p>".formatted(q.mes));
+                str.append("<hr align=\"right\" width=\"300\" size=\"4\" color=\"#ff9900\" />");
+                str.append("</div>");
+                str.append("</div>\n");
+            }
+//            String cookies = request.getHeader("Cookie");
+
+            return ServerAnswer.OK.setBodyPart(str.toString());
+        }
+        catch (AccessDenied e) {
+            logger.warning("Warning no such session identifier", e);
+            return ServerAnswer.Forbidden;
+        }
+        catch (DataStorageException e) {
+            logger.warning("Error connecting to data storage", e);
             return ServerAnswer.InternalServerError;
         }
     }

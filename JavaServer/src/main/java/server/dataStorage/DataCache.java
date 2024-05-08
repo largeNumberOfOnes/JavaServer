@@ -7,6 +7,8 @@ import server.dataStorage.exceptions.DataCacheException;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.Closeable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import redis.clients.jedis.Jedis;
 
@@ -16,6 +18,7 @@ public class DataCache implements Closeable {
     private Jedis jedis = null;
 
     private String sessionIdentifierArr = "SAR";
+    private String sessionArr = "SSR";
 
     public DataCache() throws DataCacheException {
         if (instance != null) {
@@ -55,6 +58,12 @@ public class DataCache implements Closeable {
 
     public void removeSessionIdentifier(String id) {
         jedis.srem(sessionIdentifierArr, id);
+    }
+
+    public void putSessionToCache(String sessionStr) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+        String date = formatter.format( new Date() );
+        jedis.hset(sessionArr, date, sessionStr);
     }
 
     @Override

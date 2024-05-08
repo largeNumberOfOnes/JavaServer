@@ -1,9 +1,12 @@
 package server.dataStorage;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import initial.Context;
 import initial.MyLogger;
 import server.HttpRequest;
+import server.ServerAnswer;
 import server.SessionIdentifier;
 import server.dataStorage.exceptions.*;
 
@@ -18,7 +21,7 @@ public class DataStorage implements Closeable {
     private DataBase dataBase = null;
     private DataCache dataCache = null;
     private DataServer dataServer = null;
-    private ArrayList<SessionIdentifier> sessionIdentifierArr = new ArrayList<SessionIdentifier>();
+//    private ArrayList<SessionIdentifier> sessionIdentifierArr = new ArrayList<SessionIdentifier>();
 
     // Initialization and access ---------------------------------------------------------------------------------------
 
@@ -139,7 +142,18 @@ public class DataStorage implements Closeable {
 
     }
 
-    public void putRequestToCache(HttpRequest request) throws DataStorageException {
+
+    public Session SessionFromStr(String str) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        return gson.fromJson(str, Session.class);
+    }
+    public String SessionToStr(Session session) {
+        Gson gson = new Gson();
+        return gson.toJson(session);
+    }
+    public void writeSessionToCache(Session session) throws DataStorageException {
+        dataCache.putSessionToCache(SessionToStr(session));
 
     }
 

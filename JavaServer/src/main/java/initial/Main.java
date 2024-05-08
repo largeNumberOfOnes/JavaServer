@@ -2,11 +2,10 @@ package initial;
 
 //import com.mysql.jdbc.jdbc2.optional.JDBC4StatementWrapper;
 import muzzle.Muzzle;
+import server.HttpRequest;
 import server.Server;
-import server.dataStorage.DataBase;
-import server.dataStorage.DataCache;
-import server.dataStorage.DataServer;
-import server.dataStorage.DataStorage;
+import server.ServerAnswer;
+import server.dataStorage.*;
 import server.dataStorage.exceptions.DataCacheException;
 
 import java.sql.Connection;
@@ -25,15 +24,15 @@ public class Main {
         try (MyLogger logger = new MyLogger()){
             MyLogger.getInstance().info("Start main");
 
-            Thread muzzleThread = new Thread(new Muzzle(logger));
-            muzzleThread.start();
-            logger.log(Level.INFO, "Starting MainFrame");
-//
+//            Thread muzzleThread = new Thread(new Muzzle(logger));
+//            muzzleThread.start();
+//            logger.log(Level.INFO, "Starting MainFrame");
+////
             Thread serverThread = new Thread(new Server());
             serverThread.start();
             logger.log(Level.INFO, "Starting Server");
-//
-            muzzleThread.join();
+////
+//            muzzleThread.join();
             serverThread.join();
 
 //            String str = "w235";
@@ -52,6 +51,7 @@ public class Main {
 
 //            testDataCache();
 //            testDataServer();
+//            testGSON();
 
             MyLogger.getInstance().info("Close main");
         }
@@ -62,6 +62,38 @@ public class Main {
     }
 
     // TODO: log database actions
+
+    static void testGSON() {
+
+        try (DataStorage dataStorage = new DataStorage()) {
+
+//            DataStorage dataStorage = DataStorage.getInstance();
+
+//            dataStorage.SessionFromStr();
+//            HttpRequest request = new HttpRequest("""GET /hi/hi HTTP/1.1
+//                    Connection: keep-alive
+//                    Host: 192.168.1.137:8080
+//                    Upgrade-Insecure-Requests: 1
+//
+//                    bodybodybodybodybodybody
+//
+//                    """);
+//            ServerAnswer answer = new ServerAnswer("HTTP/1.1 832 Khf")
+//                    .setHeader("kkkk", "value")
+//                    .setHeader("tttt", "this is a final countdown")
+//                    .setBodyPart("move it move it");
+//
+//            Session session = new Session(request, answer);
+//
+//            System.out.println(dataStorage.SessionToStr(session));
+
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     static void testDataCache() {
 

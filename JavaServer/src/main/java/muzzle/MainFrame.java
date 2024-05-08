@@ -17,6 +17,7 @@ public class MainFrame extends JFrame {
     private JPanel consolePan;
     private JTextArea consoleSpace;
     private JTextField consoleInput;
+    private JTable table1;
 
     public MainFrame(MyLogger logger) {
 

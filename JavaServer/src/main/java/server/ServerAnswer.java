@@ -35,6 +35,10 @@ public class ServerAnswer {
         return this;
     }
 
+    public String getMes() {
+        return mes;
+    }
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder(mes);

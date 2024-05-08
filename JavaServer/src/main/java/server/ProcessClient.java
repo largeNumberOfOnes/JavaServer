@@ -1,6 +1,9 @@
 package server;
 
 import initial.MyLogger;
+import server.dataStorage.DataStorage;
+import server.dataStorage.Session;
+import server.dataStorage.exceptions.DataStorageException;
 import server.requestProcessor.RequestProcessor;
 
 import java.io.*;
@@ -38,6 +41,7 @@ public class ProcessClient implements Runnable {
         MyLogger logger = MyLogger.getInstance();
 
         logger.info("Starting ProcessClient[" + Thread.currentThread().getId() + "]");
+        HttpRequest request = null;
         ServerAnswer ans = null;
         try (
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
@@ -47,7 +51,7 @@ public class ProcessClient implements Runnable {
                 String requestStr = readRequest(input);
                 logger.info("HTTP request:\n" + requestStr.replace("\n", "\n\t| "));
 
-                HttpRequest request = new HttpRequest(requestStr);
+                request = new HttpRequest(requestStr);
                 logger.info("Process HTTP request");
                 ans = RequestProcessor.process(request);
 
@@ -67,6 +71,14 @@ public class ProcessClient implements Runnable {
 //            output.write(ans.toString());
 //            output.write("\n");
 //            output.flush();
+            try {
+                DataStorage dataStorage = DataStorage.getInstance();
+                System.out.println(dataStorage.SessionToStr(new Session(request, ans)));
+                dataStorage.writeSessionToCache(new Session(request, ans));
+            }
+            catch (DataStorageException e) {
+                logger.warning("Error while writing session into cache");
+            }
         }
         catch (IOException e) {
             logger.warning("Client connection processing error", e);
